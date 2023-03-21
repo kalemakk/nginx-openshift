@@ -1,0 +1,39 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: docker-build
+  namespace: nginx
+  labels:
+    name: docker-build
+spec:
+  triggers:
+    - type: GitHub
+      github:
+        secret: github-credentails
+    - type: ImageChange
+      imageChange: {}
+    - type: ConfigChange
+  source:
+    type: Git
+    git:
+      uri: 'https://github.com/kalemakk/nginx-openshift.git'
+  strategy:
+    type: Docker
+    dockerStrategy:
+      from:
+        kind: ImageStreamTag
+        name: 'nginx:latest'
+        namespace: openshift
+      env:
+        - name: EXAMPLE
+          value: sample-app
+  output:
+    to:
+      kind: ImageStreamTag
+      name: 'resume-app:latest'
+  postCommit:
+    args:
+      - bundle
+      - exec
+      - rake
+      - test
