@@ -1,10 +1,10 @@
 apiVersion: build.openshift.io/v1
 kind: BuildConfig
 metadata:
-  name: docker-build
+  name: resume-app
   namespace: nginx
   labels:
-    name: docker-build
+    name: resume-app
 spec:
   triggers:
     - type: GitHub
@@ -24,16 +24,16 @@ spec:
         kind: ImageStreamTag
         name: 'nginx:latest'
         namespace: openshift
-      env:
-        - name: EXAMPLE
-          value: sample-app
+      # env:
+      #   - name: EXAMPLE
+      #     value: sample-app
   output:
     to:
       kind: ImageStreamTag
       name: 'resume-app:latest'
-  postCommit:
-    args:
-      - bundle
-      - exec
-      - rake
-      - test
+  # postCommit:
+  #   args:
+  #     - bundle
+  #     - exec
+  #     - rake
+  #     - test
