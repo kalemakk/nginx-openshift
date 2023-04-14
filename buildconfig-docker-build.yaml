@@ -30,7 +30,7 @@ spec:
   output:
     to:
       kind: ImageStreamTag
-      name: 'resume-app:latest'
+      name: 'resume:latest'
   # postCommit:
   #   args:
   #     - bundle

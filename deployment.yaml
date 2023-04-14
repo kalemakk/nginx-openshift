@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  namespace: nginx
+  name: resume-deploy
+  annotations:
+    image.openshift.io/triggers: >-
+      [{"from":{"kind":"ImageStreamTag","name":"resume:latest","namespace":"nginx"},"fieldPath":"spec.template.spec.containers[?(@.name==\"container\")].image","pause":"true"}]
+spec:
+  selector:
+    matchLabels:
+      app: resume-deploy
+  replicas: 3
+  template:
+    metadata:
+      labels:
+        app: resume-deploy
+    spec:
+      containers:
+        - name: resume-app
+          image: >-
+            image-registry.openshift-image-registry.svc:5000/nginx/resume@sha256:51e6edc902380f8cb4e8a33464dfae8c6940109ebdc71d45d9e6ba98768cee45
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env: []
+      imagePullSecrets: []
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+  paused: false
